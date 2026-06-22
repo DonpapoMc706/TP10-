@@ -20,21 +20,32 @@ int totalBloques = 0;
 
 void *mi_malloc(size_t bytes, const char *archivo, int línea) {
       void *ptr = malloc(bytes);
-        if (ptr != NULL) {
-            for (int i = 0; i < 100; i++) {
-                if (registro[i].direccion == NULL) {
-                    registro[i].direccion = ptr;
-                    registro[i].bytes = bytes;
-                    strncpy(registro[i].archivo, archivo, sizeof(registro[i].archivo) - 1);
-                    registro[i].archivo[sizeof(registro[i].archivo) - 1] = '\0';
-                    registro[i].línea = línea;
-                    totalBloques++;
-                    break;
-        
+         {
+            registro[totalBloques].direccion = ptr; {
+                if (registro[totalBloques].direccion == NULL) {
+                    registro[totalBloques].direccion = ptr;
+                    registro[totalBloques].bytes = bytes;
+                    strncpy(registro[totalBloques].archivo, archivo, sizeof(registro[totalBloques].archivo) - 1);
+                    registro[totalBloques].archivo[sizeof(registro[totalBloques].archivo) - 1] = '\0';
+                    registro[totalBloques].línea = línea;
+                    totalBloques++; 
                 }
             }
         }
     return ptr;
     } 
+    void mi_free(void* ptr, const char* archivo, int línea) {
+        free(ptr);
+        for (int i = 0; i < totalBloques; i++) {
+            if (registro[i].direccion == ptr) {
+                for (int j = i; j < totalBloques - 1; j++) {
+                    registro[j] = registro[j + 1];
+                }
+                totalBloques--;
+                break;
+            }
+    
+    
+}
 #define malloc(x) mi_malloc(x, __FILE__, __LINE__)
 #define free(x) mi_free(x, __FILE__, __LINE__)
