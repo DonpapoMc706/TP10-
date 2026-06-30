@@ -52,7 +52,7 @@ void *mi_malloc(size_t bytes, const char *archivo, int línea) {
                      registro[i].archivo,
                      registro[i].línea);
         }
-       int altaUsuario(usuario lista, int* cantidad, int maxUsuarios) {
+       int() altaUsuario(usuario lista, int* cantidad, int maxUsuarios) {
             if (*cantidad >= maxUsuarios) {
                 printf("No se pueden agregar mas usuarios. Se ha alcanzado el límite máximo.\n");
                 return 0;
@@ -65,14 +65,15 @@ void *mi_malloc(size_t bytes, const char *archivo, int línea) {
         }
         printf("Ingrese el ID del usuario: ");
         scanf("%d", &nuevoUsuario->id);
-        do-while (strlen(nuevoUsuario->nickname) == 0 || isdigit(nuevoUsuario->nickname[0])) {
+        do {
             printf("El nickname no puede estar vacío o comenzar con un número. Ingrese el nickname del usuario: ");
             scanf("%s", nuevoUsuario->nickname);
-        }
-        do-while (nuevoUsuario->edad < 5 || nuevoUsuario->edad > 100) {
+          }  while (strlen(nuevoUsuario->nickname) == 0 || isdigit(nuevoUsuario->nickname[0]))
+        
+        do {
             printf("La edad debe estar entre 5 y 100. Ingrese la edad del usuario: ");
             scanf("%d", &nuevoUsuario->edad);
-        }
+         } while (nuevoUsuario->edad < 5 || nuevoUsuario->edad > 100);
         printf("Ingrese el país del usuario: ");
         scanf("%s", nuevoUsuario->pais);
 
@@ -80,3 +81,18 @@ void *mi_malloc(size_t bytes, const char *archivo, int línea) {
     }
 #define malloc(x) mi_malloc(x, __FILE__, __LINE__)
 #define free(x) mi_free(x, __FILE__, __LINE__)
+
+int main() {
+    int maxUsuarios = 5;
+    int cantidad =0;
+    usuario* listaUsuarios[5];
+
+    printf("---sistema de registros ----");
+    altaUsuario(listaUsuarios, &cantidad, maxUsuarios);
+    printf("reservando memoria");
+    mostrarMemoriaReservada();
+    if (cantidad > 0) {
+        free(listaUsuarios[0]);
+    }
+   return 0;
+}
