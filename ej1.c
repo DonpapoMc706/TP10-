@@ -51,13 +51,13 @@ void *mi_malloc(size_t bytes, const char *archivo, int línea) {
                      registro[i].bytes,
                      registro[i].archivo,
                      registro[i].línea);
+            }
         }
-       int() altaUsuario(usuario lista, int* cantidad, int maxUsuarios) {
+       int altaUsuario(usuario** lista, int* cantidad, int maxUsuarios) {
             if (*cantidad >= maxUsuarios) {
                 printf("No se pueden agregar mas usuarios. Se ha alcanzado el límite máximo.\n");
                 return 0;
             }
-        }
         usuario*nuevoUsuario = (usuario*)malloc(sizeof(usuario));
         if (nuevoUsuario == NULL) {
             printf("Error al reservar memoria para el nuevo usuario.\n");
@@ -65,17 +65,24 @@ void *mi_malloc(size_t bytes, const char *archivo, int línea) {
         }
         printf("Ingrese el ID del usuario: ");
         scanf("%d", &nuevoUsuario->id);
+
+        int valido = 0;
         do {
+            valido = 1;
             printf("El nickname no puede estar vacío o comenzar con un número. Ingrese el nickname del usuario: ");
             scanf("%s", nuevoUsuario->nickname);
-          }  while (strlen(nuevoUsuario->nickname) == 0 || isdigit(nuevoUsuario->nickname[0]))
-        
+          }  while (strlen(nuevoUsuario->nickname) == 0 || isdigit(nuevoUsuario->nickname[0]));
+
         do {
             printf("La edad debe estar entre 5 y 100. Ingrese la edad del usuario: ");
             scanf("%d", &nuevoUsuario->edad);
          } while (nuevoUsuario->edad < 5 || nuevoUsuario->edad > 100);
+
         printf("Ingrese el país del usuario: ");
         scanf("%s", nuevoUsuario->pais);
+
+        lista[*cantidad] = nuevoUsuario;
+        (*cantidad)++;
 
         return 1;
     }
