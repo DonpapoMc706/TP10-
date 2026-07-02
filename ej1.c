@@ -92,14 +92,77 @@ void *mi_malloc(size_t bytes, const char *archivo, int línea) {
 int main() {
     int maxUsuarios = 5;
     int cantidad =0;
+    int opcion = 0;
     usuario* listaUsuarios[5];
+    
+    do {
+        printf("1. Alta de usuario\n");
+        printf("2. Mostrar memoria reservada\n");
+        printf("3. Baja de usuario\n");
+        printf("4. Mostrar usuarios\n");
+        printf("5. Salir\n");
+        printf("Seleccione una opción: ");
+        scanf("%d", &opcion);
 
-    printf("---sistema de registros ----");
-    altaUsuario(listaUsuarios, &cantidad, maxUsuarios);
-    printf("reservando memoria");
-    mostrarMemoriaReservada();
-    if (cantidad > 0) {
-        free(listaUsuarios[0]);
-    }
-   return 0;
+        switch (opcion) {
+            case 1:
+                if (altaUsuario(listaUsuarios, &cantidad, maxUsuarios)) {
+                    printf("Usuario agregado exitosamente.\n");
+                } else { 
+                    printf("No se pudo agregar el usuario.\n");
+                }
+                 break;
+                 case 2:
+                mostrarMemoriaReservada();
+                break;
+                case 3:
+                if (cantidad > 0) {
+                    int idBaja;
+                    printf("Ingrese el ID del usuario a dar de baja: ");
+                    scanf("%d", &idBaja);
+                    int encontrado = 0;
+                    for (int i = 0; i < cantidad; i++) {
+                        if (listaUsuarios[i]->id == idBaja) {
+                            free(listaUsuarios[i]);
+                            for (int j = i; j < cantidad - 1; j++) {
+                                listaUsuarios[j] = listaUsuarios[j + 1];
+                            }
+                            cantidad--;
+                            encontrado = 1;
+                            printf("Usuario con ID %d dado de baja exitosamente.\n", idBaja);
+                        }
+                    }
+                }
+            
+                            break;
+                            case 4:
+                            if (cantidad == 0) {
+                                printf("No hay usuarios registrados. \n");
+                            } else {
+                                printf("=====USUARIOS REGISTRADOS=====\n");
+                                for (int i = 0; i < cantidad; i++) {
+                                    printf("ID: %d, Nickname: %s, Edad: %d, País: %s\n",
+                                           listaUsuarios[i]->id,
+                                           listaUsuarios[i]->nickname,
+                                           listaUsuarios[i]->edad,
+                                           listaUsuarios[i]->pais);
+                                    }
+                                } 
+                                break;
+                                    case 5:
+                                    printf("Saliendo del programa.\n");
+                                    break;
+                                    default:
+                                    printf("Opciíon inválida. Intente nuevamente.\n");
+                                    break;
+                            } 
+                                    
+                                }
+                                }while (opcion != 5);   
+                                
+                    
+return 0;
 }
+                       
+        
+    
