@@ -53,6 +53,9 @@ void *mi_malloc(size_t bytes, const char *archivo, int línea) {
                      registro[i].línea);
             }
         }
+        #define malloc(x) mi_malloc(x, __FILE__, __LINE__)
+        #define free(x) mi_free(x, __FILE__, __LINE__)
+
        int altaUsuario(usuario** lista, int* cantidad, int maxUsuarios) {
             if (*cantidad >= maxUsuarios) {
                 printf("No se pueden agregar mas usuarios. Se ha alcanzado el límite máximo.\n");
@@ -86,14 +89,28 @@ void *mi_malloc(size_t bytes, const char *archivo, int línea) {
 
         return 1;
     }
-#define malloc(x) mi_malloc(x, __FILE__, __LINE__)
-#define free(x) mi_free(x, __FILE__, __LINE__)
+
+    int bajaUsuario(usuario** lista, int* cantidad, int id) {
+        for (int i = 0; i < *cantidad; i++) {
+            if (lista[i]->id == id) {
+                free(lista[i]);
+                for (int j = i; j < *cantidad - 1; j++) {
+                    lista[j] = lista[j + 1];
+                }
+                (*cantidad)--;
+                return 1;
+                }
+            }
+            printf("Usuario con ID %d no encontrado.\n", id);
+            return 0;
+        }
 
 int main() {
     int maxUsuarios = 5;
     int cantidad =0;
     int opcion = 0;
-    usuario* listaUsuarios[5];
+
+    usuario** listaUsuarios = (usuario**)malloc(maxUsuarios * sizeof(usuario*));
     
     do {
         printf("1. Alta de usuario\n");
@@ -106,35 +123,14 @@ int main() {
 
         switch (opcion) {
             case 1:
-                if (altaUsuario(listaUsuarios, &cantidad, maxUsuarios)) {
-                    printf("Usuario agregado exitosamente.\n");
-                } else { 
-                    printf("No se pudo agregar el usuario.\n");
-                }
-                 break;
-                 case 2:
-                mostrarMemoriaReservada();
-                break;
-                case 3:
-                if (cantidad > 0) {
-                    int idBaja;
-                    printf("Ingrese el ID del usuario a dar de baja: ");
-                    scanf("%d", &idBaja);
-                    int encontrado = 0;
-                    for (int i = 0; i < cantidad; i++) {
-                        if (listaUsuarios[i]->id == idBaja) {
-                            free(listaUsuarios[i]);
-                            for (int j = i; j < cantidad - 1; j++) {
-                                listaUsuarios[j] = listaUsuarios[j + 1];
-                            }
-                            cantidad--;
-                            encontrado = 1;
-                            printf("Usuario con ID %d dado de baja exitosamente.\n", idBaja);
-                        }
-                    }
-                }
-            
+               if (cantidad < maxUsuarios) {
+                 maxUsuarios += 5;
+                 void* vieja_direccion = listaUsuarios;
+                 listaUsuarios = (usuario**)realloc(listaUsuarios, maxUsuarios * sizeof(usuario*)):
+                for (int i)
+               }
                             break;
+
                             case 4:
                             if (cantidad == 0) {
                                 printf("No hay usuarios registrados. \n");
@@ -157,9 +153,18 @@ int main() {
                                     break;
                             } 
                                     
-                                }
+                                
                                 }while (opcion != 5);   
                                 
+          printf("Liberando memoria de usuarios restantes...\n");
+          for (int i = 0; i < cantidad; i++) {
+                free(listaUsuarios[i]);
+          }
+            free(listaUsuarios);
+            mostrarMemoriaReservada();
+            
+
+                    
                     
 return 0;
 }
