@@ -107,11 +107,11 @@ int bajaUsuario(usuario** lista, int* cantidad, int id) {
 }
 
 int main() {
-    int maxUsuarios = 5;
+    int maxUsuarios = 0;
     int cantidad = 0;
     int opcion = 0;
 
-    usuario** listaUsuarios = (usuario**)malloc(maxUsuarios * sizeof(usuario*));
+    usuario** listaUsuarios  = NULL;
     
     do {
         printf("\n1. Alta de usuario\n");
@@ -127,7 +127,18 @@ int main() {
                 if (cantidad == maxUsuarios) {
                     maxUsuarios += 5;
                     void* vieja_direccion = listaUsuarios;
-                    listaUsuarios = (usuario**)realloc(listaUsuarios, maxUsuarios * sizeof(usuario*));
+                    
+                    if (listaUsuarios == NULL) {
+                        listaUsuarios = (usuario**)malloc(maxUsuarios * sizeof(usuario*));
+                    } else {
+                        listaUsuarios = (usuario**)malloc(maxUsuarios * sizeof(usuario*));
+                        if (listaUsuarios == NULL) {
+                            printf("Error al aumentar la capacidad de usuarios.\n");
+                            return 1;
+                        }
+                        memcpy(listaUsuarios, vieja_direccion, cantidad * sizeof(usuario*));
+                        free(vieja_direccion);
+                    }
                     
                     for (int i = 0; i < totalBloques; i++) {
                         if (registro[i].direccion == vieja_direccion) {
